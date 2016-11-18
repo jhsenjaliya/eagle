@@ -24,10 +24,10 @@ import org.apache.eagle.log.entity.meta.EntityDefinition;
 import org.apache.eagle.log.entity.meta.EntityDefinitionManager;
 import org.apache.eagle.log.entity.meta.IndexDefinition;
 import org.apache.eagle.log.entity.meta.MetricDefinition;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.JsonNodeFactory;
-import org.codehaus.jackson.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -41,153 +41,160 @@ import java.util.Map;
 
 @Path(MetadataResource.PATH_META)
 public class MetadataResource {
-    static final String PATH_META = "meta";
-    static final String PATH_RESOURCE = "resource";
-    static final String PATH_SERVICE = "service";
+	final static String PATH_META = "meta";
+	final static String PATH_RESOURCE = "resource";
+	final static String PATH_SERVICE = "service";
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response index(@Context Application application,
-                          @Context HttpServletRequest request) {
-        String basePath = request.getRequestURL().toString();
-        ObjectNode root = JsonNodeFactory.instance.objectNode();
+	final static String SERVICE_COUNT = "count";
+	final static String SERVICE_SERVICES = "services";
 
-        root.put(PATH_RESOURCE, joinUri(basePath, PATH_RESOURCE));
-        root.put(PATH_SERVICE, joinUri(basePath, PATH_SERVICE));
-        return Response.ok().entity(root).build();
-    }
+	final static String RESOURCE_BASE = "base";
+	final static String RESOURCE_RESOURCES = "resources";
 
-    @GET
-    @Path(PATH_RESOURCE)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response listAllResourcesRoutes(@Context Application application,
-                                           @Context HttpServletRequest request) {
-        String basePath = request.getRequestURL().toString();
-        basePath = basePath.substring(0, basePath.length() - PATH_META.length() - PATH_RESOURCE.length() - 1);
-        ObjectNode root = JsonNodeFactory.instance.objectNode();
-        root.put("base", basePath);
-        ArrayNode resources = JsonNodeFactory.instance.arrayNode();
-        root.put("resources", resources);
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response index(@Context Application application,
+                        @Context HttpServletRequest request){
+		String basePath = request.getRequestURL().toString();
+		ObjectNode root = JsonNodeFactory.instance.objectNode();
 
-        for (Class<?> aClass : application.getClasses()) {
-            if (isAnnotatedResourceClass(aClass)) {
-                AbstractResource resource = IntrospectionModeller.createResource(aClass);
-                ObjectNode resourceNode = JsonNodeFactory.instance.objectNode();
-                String uriPrefix = resource.getPath().getValue();
+		root.put(PATH_RESOURCE,joinUri(basePath,PATH_RESOURCE));
+		root.put(PATH_SERVICE,joinUri(basePath,PATH_SERVICE));
+		return Response.ok().entity(root).build();
+	}
 
-                for (AbstractSubResourceMethod srm : resource.getSubResourceMethods()) {
-                    String uri = uriPrefix + "/" + srm.getPath().getValue();
-                    addTo(resourceNode, uri, srm, joinUri(basePath, uri));
-                }
+	@GET
+	@Path(PATH_RESOURCE)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listAllResourcesRoutes(@Context Application application,
+	                                       @Context HttpServletRequest request){
+		String basePath = request.getRequestURL().toString();
+		basePath = basePath.substring(0,basePath.length() - PATH_META.length() - PATH_RESOURCE.length() -1);
+		ObjectNode root = JsonNodeFactory.instance.objectNode();
+		root.put(RESOURCE_BASE,basePath);
+		ArrayNode resources = JsonNodeFactory.instance.arrayNode();
+		root.put( RESOURCE_RESOURCES, resources );
 
-                for (AbstractResourceMethod srm : resource.getResourceMethods()) {
-                    addTo(resourceNode, uriPrefix, srm, joinUri(basePath, uriPrefix));
-                }
-                resources.add(resourceNode);
-            }
-        }
+		for ( Class<?> aClass : application.getClasses()){
+			if ( isAnnotatedResourceClass(aClass)){
+				AbstractResource resource = IntrospectionModeller.createResource(aClass);
+				ObjectNode resourceNode = JsonNodeFactory.instance.objectNode();
+				String uriPrefix = resource.getPath().getValue();
 
-        return Response.ok().entity(root).build();
-    }
+				for ( AbstractSubResourceMethod srm : resource.getSubResourceMethods() ) {
+					String uri = uriPrefix + "/" + srm.getPath().getValue();
+					addTo( resourceNode, uri, srm, joinUri(basePath, uri) );
+				}
 
-    private String joinUri(String basePath, String uriPrefix) {
-        if (basePath.endsWith("/") && uriPrefix.startsWith("/")) {
-            return basePath.substring(0, basePath.length() - 2) + uriPrefix;
-        } else if (basePath.endsWith("/") || uriPrefix.startsWith("/")) {
-            return basePath + uriPrefix;
-        }
-        return basePath + "/" + uriPrefix;
-    }
+				for ( AbstractResourceMethod srm : resource.getResourceMethods() ) {
+					addTo( resourceNode, uriPrefix, srm, joinUri( basePath, uriPrefix ) );
+				}
+				resources.add( resourceNode );
+			}
+		}
 
-    private void addTo(ObjectNode resourceNode, String uriPrefix, AbstractResourceMethod srm, String path) {
-        if (resourceNode.get(uriPrefix) == null) {
-            ObjectNode inner = JsonNodeFactory.instance.objectNode();
-            inner.put("path", path);
-            inner.put("methods", JsonNodeFactory.instance.arrayNode());
-            resourceNode.put(uriPrefix, inner);
-        }
+		return Response.ok().entity( root ).build();
+	}
 
-        ((ArrayNode) resourceNode.get(uriPrefix).get("methods")).add(srm.getHttpMethod());
-    }
+	private String joinUri(String basePath, String uriPrefix) {
+		if(basePath.endsWith("/") && uriPrefix.startsWith("/")){
+			return basePath.substring(0,basePath.length()-2)+uriPrefix;
+		}else if(basePath.endsWith("/") || uriPrefix.startsWith("/")){
+			return basePath+ uriPrefix;
+		}
+		return basePath+"/"+uriPrefix;
+	}
 
-    @SuppressWarnings( {"rawtypes", "unchecked"})
-    private boolean isAnnotatedResourceClass(Class rc) {
-        if (rc.isAnnotationPresent(Path.class)) {
-            return true;
-        }
+	private void addTo( ObjectNode resourceNode, String uriPrefix, AbstractResourceMethod srm, String path ){
+		if(resourceNode.get( uriPrefix ) == null){
+			ObjectNode inner = JsonNodeFactory.instance.objectNode();
+			inner.put("path", path);
+			inner.put("methods", JsonNodeFactory.instance.arrayNode());
+			resourceNode.put( uriPrefix, inner );
+		}
 
-        for (Class i : rc.getInterfaces()) {
-            if (i.isAnnotationPresent(Path.class)) {
-                return true;
-            }
-        }
+		((ArrayNode) resourceNode.get( uriPrefix ).get("methods")).add( srm.getHttpMethod() );
+	}
 
-        return false;
-    }
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private boolean isAnnotatedResourceClass( Class rc ){
+		if ( rc.isAnnotationPresent( Path.class ) ) {
+			return true;
+		}
 
-    @GET
-    @Path(PATH_SERVICE)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response listAllEntities(@Context Application application,
-                                    @Context HttpServletRequest request) throws Exception {
-        Map<String, EntityDefinition> entities = EntityDefinitionManager.entities();
-        ObjectNode root = JsonNodeFactory.instance.objectNode();
+		for ( Class i : rc.getInterfaces() ) {
+			if ( i.isAnnotationPresent( Path.class ) ) {
+				return true;
+			}
+		}
 
-        ArrayNode services = JsonNodeFactory.instance.arrayNode();
+		return false;
+	}
 
-        for (Map.Entry<String, EntityDefinition> entry : entities.entrySet()) {
-            // ObjectNode serviceNode = JsonNodeFactory.instance.objectNode();
-            // serviceNode.put(entry.getKey(),entityDefationitionAsJson(entry.getValue()));
-            services.add(entityDefationitionAsJson(entry.getValue()));
-        }
-        root.put("count", entities.keySet().size());
-        root.put("services", services);
-        return Response.ok().entity(root).build();
-    }
+	@GET
+	@Path(PATH_SERVICE)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listAllEntities(@Context Application application,
+                                     @Context HttpServletRequest request) throws Exception {
+		Map<String,EntityDefinition> entities = EntityDefinitionManager.entities();
+		ObjectNode root = JsonNodeFactory.instance.objectNode();
 
-    private JsonNode entityDefationitionAsJson(EntityDefinition def) {
-        ObjectNode node = JsonNodeFactory.instance.objectNode();
-        node.put("service", def.getService());
-        node.put("entityClass", def.getEntityClass().getName());
-        node.put("table", def.getTable());
-        node.put("columnFamily", def.getColumnFamily());
-        node.put("prefix", def.getPrefix());
-        if (def.getPartitions() != null) {
-            node.put("partitions", arrayNode(def.getPartitions()));
-        }
-        node.put("isTimeSeries", def.isTimeSeries());
+		ArrayNode services = JsonNodeFactory.instance.arrayNode();
 
-        MetricDefinition mdf = def.getMetricDefinition();
-        if (mdf != null) {
-            node.put("interval", mdf.getInterval());
-        }
+		for(Map.Entry<String,EntityDefinition> entry : entities.entrySet()){
+//			ObjectNode serviceNode = JsonNodeFactory.instance.objectNode();
+//			serviceNode.put(entry.getKey(),entityDefationitionAsJson(entry.getValue()));
+			services.add(entityDefationitionAsJson(entry.getValue()));
+		}
 
-        IndexDefinition[] indexDef = def.getIndexes();
-        if (indexDef != null) {
-            ArrayNode indexDefArray = JsonNodeFactory.instance.arrayNode();
-            for (IndexDefinition idef : indexDef) {
-                ObjectNode idn = JsonNodeFactory.instance.objectNode();
-                idn.put("indexPrefix", idef.getIndexPrefix());
+		root.put(SERVICE_COUNT,entities.keySet().size());
+		root.put(SERVICE_SERVICES,services);
+		return Response.ok().entity(root).build();
+	}
 
-                if (idef.getIndex() != null) {
-                    ObjectNode index = JsonNodeFactory.instance.objectNode();
-                    index.put("name", idef.getIndex().name());
-                    index.put("columns", arrayNode(idef.getIndex().columns()));
-                    idn.put("index", index);
-                }
+	private JsonNode entityDefationitionAsJson(EntityDefinition def) {
+		ObjectNode node = JsonNodeFactory.instance.objectNode();
+		node.put("service",def.getService());
+		node.put("entityClass",def.getEntityClass().getName());
+		node.put("table",def.getTable());
+		node.put("columnFamily",def.getColumnFamily());
+		node.put("prefix",def.getPrefix());
+		if(def.getPartitions()!=null){
+			node.put("partitions",arrayNode(def.getPartitions()));
+		}
+		node.put("isTimeSeries",def.isTimeSeries());
 
-                indexDefArray.add(idn);
-            }
-            node.put("indexs", indexDefArray);
-        }
-        return node;
-    }
+		MetricDefinition mdf = def.getMetricDefinition();
+		if(mdf!=null){
+			node.put("interval", mdf.getInterval());
+		}
 
-    private ArrayNode arrayNode(String[] values) {
-        ArrayNode an = JsonNodeFactory.instance.arrayNode();
-        for (String v : values) {
-            an.add(v);
-        }
-        return an;
-    }
+		IndexDefinition[] indexDef = def.getIndexes();
+		if(indexDef!=null){
+			ArrayNode indexDefArray = JsonNodeFactory.instance.arrayNode();
+			for(IndexDefinition idef : indexDef){
+				ObjectNode idn = JsonNodeFactory.instance.objectNode();
+				idn.put("indexPrefix",idef.getIndexPrefix());
+
+				if(idef.getIndex()!=null){
+					ObjectNode index = JsonNodeFactory.instance.objectNode();
+					index.put("name",idef.getIndex().name());
+					index.put("columns",arrayNode(idef.getIndex().columns()));
+					idn.put("index",index);
+				}
+
+				indexDefArray.add(idn);
+			}
+			node.put("indexs",indexDefArray);
+		}
+		return node;
+	}
+
+	private ArrayNode arrayNode(String[] values){
+		ArrayNode an = JsonNodeFactory.instance.arrayNode();
+		for(String v:values){
+			an.add(v);
+		}
+		return an;
+	}
 }
