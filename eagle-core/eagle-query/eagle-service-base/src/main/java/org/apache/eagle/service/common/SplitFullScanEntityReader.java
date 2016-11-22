@@ -137,10 +137,8 @@ public class SplitFullScanEntityReader<T extends TaggedLogAPIEntity> {
             }
             final long slotEndTime = startTime + ((i + 1) * duration);
             final SearchCondition condition = new SearchCondition();
-            final String slotStartTimeString = DateTimeUtil.secondsToHumanDate(slotStartTime / 1000);
-            final String slotEndTimeString = DateTimeUtil.secondsToHumanDate(slotEndTime / 1000);
-            condition.setStartTime(slotStartTimeString);
-            condition.setEndTime(slotEndTimeString);
+			condition.setStartTime(slotStartTime);
+			condition.setEndTime(slotEndTime);
 
             condition.setFilter(comp.filter());
             condition.setQueryExpression(comp.getQueryExpression());

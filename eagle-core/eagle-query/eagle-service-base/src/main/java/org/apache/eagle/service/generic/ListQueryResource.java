@@ -117,10 +117,10 @@ public class ListQueryResource {
             // 3. Set time range if it's timeseries service
             String serviceName = comp.serviceName();
             EntityDefinition ed = EntityDefinitionManager.getEntityByServiceName(serviceName);
-            if (ed.isTimeSeries()) {
+            if(ed.isTimeSeries()){
                 // TODO check timestamp exists for timeseries or topology data
-                condition.setStartTime(startTime);
-                condition.setEndTime(endTime);
+                condition.setStartTime(DateTimeUtil.parseTimeStrToMilliseconds(startTime));
+                condition.setEndTime(DateTimeUtil.parseTimeStrToMilliseconds(endTime));
             }
 
             // 4. Set HBase start scanning rowkey if given
@@ -238,6 +238,7 @@ public class ListQueryResource {
                 LOG.warn("Parameter \"top\" is only used for sort query! Ignore top parameter this time since it's not a sort query");
             }
 
+
             // TODO: For now we don't support one query to query multiple partitions. In future
             // if partition is defined for the entity, internally We need to spawn multiple
             // queries and send one query for each search condition for each partition
@@ -249,8 +250,8 @@ public class ListQueryResource {
             EntityDefinition ed = EntityDefinitionManager.getEntityByServiceName(serviceName);
             if (ed.isTimeSeries()) {
                 // TODO check timestamp exists for timeseries or topology data
-                condition.setStartTime(startTime);
-                condition.setEndTime(endTime);
+                condition.setStartTime(DateTimeUtil.parseTimeStrToMilliseconds(startTime));
+                condition.setEndTime(DateTimeUtil.parseTimeStrToMilliseconds(endTime));
             }
             condition.setOutputVerbose(verbose == null || verbose);
             condition.setOutputAlias(comp.getOutputAlias());
@@ -427,7 +428,7 @@ public class ListQueryResource {
                     LOG.info("Output: " + StringUtils.join(condition.getOutputFields(), ", "));
                 }
                 TimeSeriesAggregator tsAgg = new TimeSeriesAggregator(groupbyFields, comp.aggregateFunctionTypes(), aggregateFields,
-                    DateTimeUtil.humanDateToDate(condition.getStartTime()).getTime(), DateTimeUtil.humanDateToDate(condition.getEndTime()).getTime(), intervalmin * 60 * 1000);
+                        condition.getStartTime(), condition.getEndTime(), intervalmin*60*1000);
                 if (parallel <= 0) {
                     reader.register(tsAgg);
                 } else {

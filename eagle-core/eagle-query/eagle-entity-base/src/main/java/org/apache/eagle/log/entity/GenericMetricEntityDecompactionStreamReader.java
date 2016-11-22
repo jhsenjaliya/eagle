@@ -16,7 +16,6 @@
  */
 package org.apache.eagle.log.entity;
 
-import org.apache.eagle.common.DateTimeUtil;
 import org.apache.eagle.log.base.taggedlog.TaggedLogAPIEntity;
 import org.apache.eagle.log.entity.meta.EntityDefinition;
 import org.apache.eagle.log.entity.meta.EntityDefinitionManager;
@@ -48,8 +47,8 @@ public class GenericMetricEntityDecompactionStreamReader extends StreamReader im
         ed = EntityDefinitionManager.getEntityByServiceName(serviceName);
         checkIsMetric(ed);
         reader = new GenericEntityStreamReader(serviceName, condition, metricName);
-        start = DateTimeUtil.humanDateToSeconds(condition.getStartTime()) * 1000;
-        end = DateTimeUtil.humanDateToSeconds(condition.getEndTime()) * 1000;
+        start = condition.getStartTime();
+        end = condition.getEndTime();
     }
 
     private void checkIsMetric(EntityDefinition ed) {

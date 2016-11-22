@@ -42,8 +42,8 @@ public class GenericEntityStreamReaderMT extends StreamReader {
     public GenericEntityStreamReaderMT(String serviceName, SearchCondition condition, int numThreads) throws Exception {
         checkIsTimeSeries(serviceName);
         checkNumThreads(numThreads);
-        long queryStartTime = DateTimeUtil.humanDateToSeconds(condition.getStartTime()) * 1000;
-        long queryEndTime = DateTimeUtil.humanDateToSeconds(condition.getEndTime()) * 1000;
+        long queryStartTime = condition.getStartTime();
+        long queryEndTime = condition.getEndTime();
         long subStartTime = queryStartTime;
         long subEndTime = 0;
         long interval = (queryEndTime - queryStartTime) / numThreads;
@@ -58,8 +58,8 @@ public class GenericEntityStreamReaderMT extends StreamReader {
             String strStartTime = DateTimeUtil.millisecondsToHumanDateWithSeconds(subStartTime);
             String strEndTime = DateTimeUtil.millisecondsToHumanDateWithSeconds(subEndTime);
             SearchCondition sc = new SearchCondition(condition);
-            sc.setStartTime(strStartTime);
-            sc.setEndTime(strEndTime);
+            sc.setStartTime(subStartTime);
+            sc.setEndTime(subEndTime);
             GenericEntityStreamReader reader = new GenericEntityStreamReader(serviceName, sc);
             readers.add(reader);
         }

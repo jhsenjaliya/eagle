@@ -33,134 +33,116 @@ import java.util.Map;
  * 6. entityName
  * 7. pagination: pageSize and startRowkey
  */
-public class SearchCondition {
-    private String startTime;
-    private String endTime;
-    private Filter filter;
-    private List<String> outputFields;
-    private boolean outputAll;
-    private long pageSize;
-    private String startRowkey;
-    private String entityName;
-    private List<String> partitionValues;
-    private ORExpression queryExpression;
+public class SearchCondition{
+	private long startTime;
+	private long endTime;
+	private Filter filter;
+	private List<String> outputFields;
+	private boolean outputAll;
+	private long pageSize;
+	private String startRowkey;
+	private String entityName;
+	private List<String> partitionValues;
+	private ORExpression queryExpression;
 
-    public boolean isOutputVerbose() {
-        return outputVerbose;
-    }
+	public boolean isOutputVerbose() {
+		return outputVerbose;
+	}
 
-    public void setOutputVerbose(boolean outputVerbose) {
-        this.outputVerbose = outputVerbose;
-    }
+	public void setOutputVerbose(boolean outputVerbose) {
+		this.outputVerbose = outputVerbose;
+	}
 
-    public Map<String, String> getOutputAlias() {
-        return outputAlias;
-    }
+	public Map<String, String> getOutputAlias() {
+		return outputAlias;
+	}
 
-    public void setOutputAlias(Map<String, String> outputAlias) {
-        this.outputAlias = outputAlias;
-    }
+	public void setOutputAlias(Map<String, String> outputAlias) {
+		this.outputAlias = outputAlias;
+	}
 
-    private boolean outputVerbose;
-    private Map<String, String> outputAlias;
+	private boolean outputVerbose;
+	private Map<String,String> outputAlias;
 
-    /**
-     * copy constructor.
-     *
-     * @param sc
-     */
-    public SearchCondition(SearchCondition sc) {
-        this.startTime = sc.startTime;
-        this.endTime = sc.endTime;
-        this.filter = sc.filter;
-        this.outputFields = sc.outputFields;
-        this.pageSize = sc.pageSize;
-        this.startRowkey = sc.startRowkey;
-        this.entityName = sc.entityName;
-        this.partitionValues = sc.partitionValues;
-        this.queryExpression = sc.queryExpression;
-    }
+	/**
+	 * copy constructor
+	 * @param sc
+	 */
+	public SearchCondition(SearchCondition sc){
+		this.startTime = sc.startTime;
+		this.endTime = sc.endTime;
+		this.filter = sc.filter;
+		this.outputFields = sc.outputFields;
+		this.pageSize = sc.pageSize;
+		this.startRowkey = sc.startRowkey;
+		this.entityName = sc.entityName;
+		this.partitionValues = sc.partitionValues;
+		this.queryExpression = sc.queryExpression;
+	}
+	
+	public SearchCondition(){
+	}
+	
+	public Filter getFilter() {
+		return filter;
+	}
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+	public long getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(long pageSize) {
+		this.pageSize = pageSize;
+	}
+	public String getStartRowkey() {
+		return startRowkey;
+	}
+	public void setStartRowkey(String startRowkey) {
+		this.startRowkey = startRowkey;
+	}
+	public String getEntityName() {
+		return entityName;
+	}
+	public void setEntityName(String entityName) {
+		this.entityName = entityName;
+	}
+	public List<String> getOutputFields() {
+		return outputFields;
+	}
+	public void setOutputFields(List<String> outputFields) {
+		this.outputFields = outputFields;
+	}
+	public long getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+	public long getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(long endTime) {
+		this.endTime = endTime;
+	}
+	public List<String> getPartitionValues() {
+		return partitionValues;
+	}
+	public void setPartitionValues(List<String> partitionValues) {
+		this.partitionValues = partitionValues;
+	}
+	public ORExpression getQueryExpression() {
+		return queryExpression;
+	}
+	public void setQueryExpression(ORExpression queryExpression) {
+		this.queryExpression = queryExpression;
+	}
 
-    public SearchCondition() {
-    }
+	public boolean isOutputAll() {
+		return outputAll;
+	}
 
-    public Filter getFilter() {
-        return filter;
-    }
-
-    public void setFilter(Filter filter) {
-        this.filter = filter;
-    }
-
-    public long getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(long pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public String getStartRowkey() {
-        return startRowkey;
-    }
-
-    public void setStartRowkey(String startRowkey) {
-        this.startRowkey = startRowkey;
-    }
-
-    public String getEntityName() {
-        return entityName;
-    }
-
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
-    }
-
-    public List<String> getOutputFields() {
-        return outputFields;
-    }
-
-    public void setOutputFields(List<String> outputFields) {
-        this.outputFields = outputFields;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
-    public List<String> getPartitionValues() {
-        return partitionValues;
-    }
-
-    public void setPartitionValues(List<String> partitionValues) {
-        this.partitionValues = partitionValues;
-    }
-
-    public ORExpression getQueryExpression() {
-        return queryExpression;
-    }
-
-    public void setQueryExpression(ORExpression queryExpression) {
-        this.queryExpression = queryExpression;
-    }
-
-    public boolean isOutputAll() {
-        return outputAll;
-    }
-
-    public void setOutputAll(boolean outputAll) {
-        this.outputAll = outputAll;
-    }
+	public void setOutputAll(boolean outputAll) {
+		this.outputAll = outputAll;
+	}
 }
