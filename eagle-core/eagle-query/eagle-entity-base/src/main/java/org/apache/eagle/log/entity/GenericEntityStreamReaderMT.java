@@ -55,8 +55,8 @@ public class GenericEntityStreamReaderMT extends StreamReader {
             } else {
                 subEndTime = subStartTime + interval;
             }
-            String strStartTime = DateTimeUtil.millisecondsToHumanDateWithSeconds(subStartTime);
-            String strEndTime = DateTimeUtil.millisecondsToHumanDateWithSeconds(subEndTime);
+//            String strStartTime = DateTimeUtil.millisecondsToHumanDateWithSeconds(subStartTime);
+//            String strEndTime = DateTimeUtil.millisecondsToHumanDateWithSeconds(subEndTime);
             SearchCondition sc = new SearchCondition(condition);
             sc.setStartTime(subStartTime);
             sc.setEndTime(subEndTime);
