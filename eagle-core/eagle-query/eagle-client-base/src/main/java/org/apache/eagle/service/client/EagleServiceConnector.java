@@ -25,6 +25,7 @@ import java.io.Serializable;
 /**
  * Some common codes to enable DAO through eagle service including service host/post, credential population etc.
  */
+@Deprecated
 public class EagleServiceConnector implements Serializable {
     private final String eagleServiceHost;
     private final Integer eagleServicePort;

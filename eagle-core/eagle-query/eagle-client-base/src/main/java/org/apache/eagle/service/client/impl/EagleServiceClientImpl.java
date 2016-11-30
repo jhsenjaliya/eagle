@@ -17,6 +17,7 @@
 package org.apache.eagle.service.client.impl;
 
 import com.sun.jersey.api.client.WebResource;
+import com.typesafe.config.Config;
 import org.apache.eagle.log.base.taggedlog.TaggedLogAPIEntity;
 import org.apache.eagle.log.entity.GenericServiceAPIResponseEntity;
 import org.apache.eagle.service.client.EagleServiceClientException;
@@ -37,11 +38,21 @@ public class EagleServiceClientImpl extends EagleServiceBaseClient {
         super(host, port);
     }
 
+    @Deprecated
     public EagleServiceClientImpl(EagleServiceConnector connector) {
         this(connector.getEagleServiceHost(), connector.getEagleServicePort(), connector.getUsername(), connector.getPassword());
     }
 
-    public EagleServiceClientImpl(String host, int port, String username, String password) {
+    public EagleServiceClientImpl (Config config) {
+        super(
+            config.hasPath("service.host") ? config.getString("service.host") : "localhost",
+            config.hasPath("service.port") ? config.getInt("service.port") : 9090,
+            config.hasPath("service.username") ? config.getString("service.username") : null,
+            config.hasPath("service.password") ? config.getString("service.password") : null
+        );
+    }
+
+    public EagleServiceClientImpl(String host, int port, String username, String password){
         super(host, port, username, password);
     }
 
