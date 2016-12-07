@@ -56,7 +56,12 @@ public class HBaseEntitySchemaManager {
     }
 
     public void init() {
+        if (!EagleConfigFactory.load().isAutoCreateTable()) {
+            LOG.debug("Auto create table disabled, skip creating table");
+            return;
+        }
         Configuration conf = EagleConfigFactory.load().getHbaseConf();
+
         try {
             admin = new HBaseAdmin(conf);
             Map<String, EntityDefinition> entityServiceMap = EntityDefinitionManager.entities();
