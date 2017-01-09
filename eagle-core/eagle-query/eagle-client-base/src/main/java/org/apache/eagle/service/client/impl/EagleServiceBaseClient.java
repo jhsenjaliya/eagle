@@ -121,6 +121,10 @@ public abstract class EagleServiceBaseClient implements IEagleServiceClient {
         return sb;
     }
 
+    public void setReadTimeout(int timeoutMs) {
+        client.setReadTimeout(timeoutMs);
+    }
+
     protected static String marshall(List<?> entities) throws JsonMappingException, JsonGenerationException, IOException {
         final JsonFactory factory = new JsonFactory();
         final ObjectMapper mapper = new ObjectMapper(factory);
@@ -313,6 +317,7 @@ public abstract class EagleServiceBaseClient implements IEagleServiceClient {
             }
         }
         this.isStopped = true;
+        this.getJerseyClient().destroy();
     }
 
 
