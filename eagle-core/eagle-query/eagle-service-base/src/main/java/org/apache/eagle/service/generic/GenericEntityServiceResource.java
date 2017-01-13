@@ -30,8 +30,10 @@ import org.apache.eagle.storage.exception.IllegalDataStorageException;
 import org.apache.eagle.storage.operation.*;
 import org.apache.eagle.storage.result.ModifyResult;
 import org.apache.eagle.storage.result.QueryResult;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.type.TypeFactory;
+import com.sun.jersey.api.json.JSONWithPadding;
+import org.apache.commons.lang.time.StopWatch;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

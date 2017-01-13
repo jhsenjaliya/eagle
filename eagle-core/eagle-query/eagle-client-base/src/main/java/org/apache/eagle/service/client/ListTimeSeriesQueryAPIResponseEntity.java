@@ -16,12 +16,11 @@
  */
 package org.apache.eagle.service.client;
 
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
-
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder( {"success", "exception", "elapsems", "totalResults", "elapsedms", "obj"})
+@JsonPropertyOrder({ "success", "exception", "elapsems", "totalResults", "elapsedms", "obj" })
 public class ListTimeSeriesQueryAPIResponseEntity {
 
     private boolean success;

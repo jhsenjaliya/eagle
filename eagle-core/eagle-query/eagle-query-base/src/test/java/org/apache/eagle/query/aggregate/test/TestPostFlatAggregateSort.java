@@ -19,8 +19,8 @@ package org.apache.eagle.query.aggregate.test;
 import org.apache.eagle.query.aggregate.timeseries.PostFlatAggregateSort;
 import org.apache.eagle.query.aggregate.timeseries.SortOption;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -18,7 +18,10 @@ package org.apache.eagle.log.entity.test;
 
 import org.apache.eagle.log.base.taggedlog.TaggedLogAPIEntity;
 import org.apache.eagle.log.entity.meta.*;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.apache.eagle.log.entity.meta.Column;
+import org.apache.eagle.log.entity.meta.ColumnFamily;
+import org.apache.eagle.log.entity.meta.TimeSeries;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * this class is written by customer, but it has some contracts

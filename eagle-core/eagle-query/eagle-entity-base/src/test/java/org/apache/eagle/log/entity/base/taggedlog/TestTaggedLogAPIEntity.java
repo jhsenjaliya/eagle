@@ -21,8 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.eagle.log.base.taggedlog.EntityJsonModule;
 import org.apache.eagle.log.base.taggedlog.TaggedLogAPIEntity;
 import org.apache.eagle.log.entity.meta.Column;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.junit.Assert;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
