@@ -18,6 +18,7 @@ package org.apache.eagle.service.client.impl;
 
 import com.sun.jersey.api.client.WebResource;
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
 import org.apache.eagle.log.base.taggedlog.TaggedLogAPIEntity;
 import org.apache.eagle.log.entity.GenericServiceAPIResponseEntity;
 import org.apache.eagle.service.client.EagleServiceClientException;
@@ -33,6 +34,10 @@ import java.util.Map;
 
 public class EagleServiceClientImpl extends EagleServiceBaseClient {
     private static final Logger LOG = LoggerFactory.getLogger(EagleServiceClientImpl.class);
+    private static final String SERVICE_HOST_KEY = "service.host";
+    private static final String SERVICE_PORT_KEY = "service.port";
+    private static final String SERVICE_USERNAME_KEY = "service.username";
+    private static final String SERVICE_PASSWORD_KEY = "service.password";
 
     public EagleServiceClientImpl(String host, int port) {
         super(host, port);
@@ -43,16 +48,31 @@ public class EagleServiceClientImpl extends EagleServiceBaseClient {
         this(connector.getEagleServiceHost(), connector.getEagleServicePort(), connector.getUsername(), connector.getPassword());
     }
 
-    public EagleServiceClientImpl (Config config) {
+    public EagleServiceClientImpl(Config config) {
         super(
-            config.hasPath("service.host") ? config.getString("service.host") : "localhost",
-            config.hasPath("service.port") ? config.getInt("service.port") : 9090,
-            config.hasPath("service.username") ? config.getString("service.username") : null,
-            config.hasPath("service.password") ? config.getString("service.password") : null
+            config.hasPath(SERVICE_HOST_KEY) ? config.getString(SERVICE_HOST_KEY) : "localhost",
+            tryGetPortFromConfig(config),
+            config.hasPath(SERVICE_USERNAME_KEY) ? config.getString(SERVICE_USERNAME_KEY) : null,
+            config.hasPath(SERVICE_PASSWORD_KEY) ? config.getString(SERVICE_PASSWORD_KEY) : null
         );
     }
 
-    public EagleServiceClientImpl(String host, int port, String username, String password){
+    /**
+     * Try to get eagle service port from config by key: service.port no matter STRING or INT.
+     */
+    private static int tryGetPortFromConfig(Config config) {
+        if (config.hasPath(SERVICE_PORT_KEY)) {
+            try {
+                return config.getInt(SERVICE_PORT_KEY);
+            } catch (ConfigException.WrongType wrongType) {
+                return Integer.valueOf(config.getString(SERVICE_PORT_KEY));
+            }
+        } else {
+            return 9090;
+        }
+    }
+
+    public EagleServiceClientImpl(String host, int port, String username, String password) {
         super(host, port, username, password);
     }
 
