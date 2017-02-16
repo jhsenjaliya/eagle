@@ -26,19 +26,24 @@ import org.apache.eagle.log.entity.test.TestLogAPIEntity;
 import org.apache.eagle.query.parser.EagleQueryParser;
 import org.apache.eagle.service.hbase.TestHBaseBase;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class TestGenericEntityIndexStreamReader extends TestHBaseBase {
 
-    @Test
-    public void testUniqueIndexRead() throws Exception {
+    @BeforeClass
+    public static void createTable() throws IOException, IllegalAccessException, InstantiationException {
         EntityDefinition entityDefinition = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
         hbase.createTable(entityDefinition.getTable(), entityDefinition.getColumnFamily());
+    }
 
+    @Test
+    public void testUniqueIndexRead() throws Exception {
         EntityDefinitionManager.registerEntity(TestLogAPIEntity.class);
         final EntityDefinition ed = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
 
@@ -94,8 +99,12 @@ public class TestGenericEntityIndexStreamReader extends TestHBaseBase {
 
         indexReader = new UniqueIndexStreamReader(indexDef, condition);
         batchReader = new GenericEntityBatchReader(indexReader);
+<<<<<<< HEAD
         entities = batchReader.read();
         hbase.deleteTable(entityDefinition.getTable());
+=======
+        entities =  batchReader.read();
+>>>>>>> [EAGLE-895] Improve alert engine metadata to organize by siteId
         Assert.assertNotNull(entities);
         Assert.assertTrue(entities.isEmpty());
     }
@@ -103,7 +112,7 @@ public class TestGenericEntityIndexStreamReader extends TestHBaseBase {
     @Test
     public void testNonClusterIndexRead() throws Exception {
         EntityDefinition entityDefinition = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
-        hbase.createTable(entityDefinition.getTable(), entityDefinition.getColumnFamily());
+        // hbase.createTable(entityDefinition.getTable(), entityDefinition.getColumnFamily());
 
         EntityDefinitionManager.registerEntity(TestLogAPIEntity.class);
         final EntityDefinition ed = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
@@ -161,8 +170,13 @@ public class TestGenericEntityIndexStreamReader extends TestHBaseBase {
 
         indexReader = new NonClusteredIndexStreamReader(indexDef, condition);
         batchReader = new GenericEntityBatchReader(indexReader);
+<<<<<<< HEAD
         entities = batchReader.read();
         hbase.deleteTable(entityDefinition.getTable());
+=======
+        entities =  batchReader.read();
+        // hbase.deleteTable(entityDefinition.getTable());
+>>>>>>> [EAGLE-895] Improve alert engine metadata to organize by siteId
         Assert.assertNotNull(entities);
         Assert.assertTrue(entities.isEmpty());
     }

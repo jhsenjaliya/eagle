@@ -25,15 +25,24 @@ import org.apache.eagle.log.entity.meta.IndexDefinition;
 import org.apache.eagle.log.entity.old.GenericDeleter;
 import org.apache.eagle.log.entity.test.TestLogAPIEntity;
 import org.apache.eagle.service.hbase.TestHBaseBase;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class TestTestLogAPIEntity extends TestHBaseBase {
+
+    @BeforeClass
+    public static void createTable() throws IllegalAccessException, InstantiationException, IOException {
+        EntityDefinition ed = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
+        hbase.createTable(ed.getTable(), ed.getColumnFamily());
+    }
 
     @Test
     public void testGetValue() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -89,7 +98,7 @@ public class TestTestLogAPIEntity extends TestHBaseBase {
     @Test
     public void testWriteEmptyIndexFieldAndDeleteWithoutPartition() throws Exception {
         EntityDefinition entityDefinition = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
-        hbase.createTable(entityDefinition.getTable(), entityDefinition.getColumnFamily());
+        // hbase.createTable(entityDefinition.getTable(), entityDefinition.getColumnFamily());
 
         EntityDefinition ed = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
         if (ed == null) {
@@ -176,7 +185,7 @@ public class TestTestLogAPIEntity extends TestHBaseBase {
         } finally {
             ed.setPartitions(partitions);
         }
-        hbase.deleteTable(entityDefinition.getTable());
+        // hbase.deleteTable(entityDefinition.getTable());
     }
 
 
@@ -186,7 +195,7 @@ public class TestTestLogAPIEntity extends TestHBaseBase {
     //@Test
     public void testWriteEmptyIndexFieldAndDeleteWithPartition() throws Exception {
         EntityDefinition entityDefinition = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
-        hbase.createTable(entityDefinition.getTable(), entityDefinition.getColumnFamily());
+        // hbase.createTable(entityDefinition.getTable(), entityDefinition.getColumnFamily());
 
         EntityDefinition ed = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
         if (ed == null) {
@@ -285,7 +294,7 @@ public class TestTestLogAPIEntity extends TestHBaseBase {
         } finally {
             ed.setPartitions(partitions);
         }
-        hbase.deleteTable(entityDefinition.getTable());
+        // hbase.deleteTable(entityDefinition.getTable());
     }
 
     /**
@@ -295,7 +304,7 @@ public class TestTestLogAPIEntity extends TestHBaseBase {
     //@Test
     public void testWriteEmptyIndexFieldAndDeleteWithPartitionAndTimeSeries() throws Exception {
         EntityDefinition entityDefinition = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
-        hbase.createTable(entityDefinition.getTable(), entityDefinition.getColumnFamily());
+        // hbase.createTable(entityDefinition.getTable(), entityDefinition.getColumnFamily());
 
         EntityDefinition ed = EntityDefinitionManager.getEntityDefinitionByEntityClass(TestLogAPIEntity.class);
         if (ed == null) {
@@ -399,7 +408,7 @@ public class TestTestLogAPIEntity extends TestHBaseBase {
             ed.setPartitions(partitions);
             ed.setTimeSeries(isTimeSeries);
         }
-        hbase.deleteTable(entityDefinition.getTable());
+        // hbase.deleteTable(entityDefinition.getTable());
     }
 
 }

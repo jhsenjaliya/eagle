@@ -19,7 +19,6 @@ package org.apache.eagle.service.client;
 import org.apache.eagle.service.hbase.EmbeddedHbase;
 
 public class ClientTestBase {
-
     //protected static EmbeddedServer server;
     protected static EmbeddedHbase hbase;
 
