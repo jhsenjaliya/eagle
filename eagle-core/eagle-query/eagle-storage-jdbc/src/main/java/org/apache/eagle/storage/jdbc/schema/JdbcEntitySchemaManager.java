@@ -156,8 +156,8 @@ public class JdbcEntitySchemaManager implements IJdbcEntityDDLManager {
         tagColumn.setName(tagName);
         tagColumn.setTypeCode(Types.VARCHAR);
         tagColumn.setJavaName(tagName);
-        // tagColumn.setScale(1024);
-        tagColumn.setSize(String.valueOf(JdbcConstants.DEFAULT_VARCHAR_SIZE));
+//        tagColumn.setScale(1024);
+        tagColumn.setSize(String.valueOf(JdbcConstants.DEFAULT_FIELD_VARCHAR_SIZE));
         tagColumn.setDefaultValue(null);
         tagColumn.setDescription("eagle entity tag column for " + tagName);
         return tagColumn;
@@ -198,7 +198,7 @@ public class JdbcEntitySchemaManager implements IJdbcEntityDDLManager {
             // Index index = new UniqueIndex();
             for (String tag : entityDefinition.getInternal().getTags()) {
                 Column tagColumn = createTagColumn(tag);
-                tagColumn.setSize(String.valueOf(JdbcConstants.DEFAULT_VARCHAR_SIZE));
+                tagColumn.setSize(String.valueOf(JdbcConstants.DEFAULT_TAG_VARCHAR_SIZE));
                 table.addColumn(tagColumn);
                 // IndexColumn indexColumn = new IndexColumn();
                 // indexColumn.setName(tag);
@@ -215,10 +215,8 @@ public class JdbcEntitySchemaManager implements IJdbcEntityDDLManager {
             fieldColumn.setName(entry.getKey());
             fieldColumn.setJavaName(entry.getKey());
             Integer typeCode = entityDefinition.getJdbcColumnTypeCodeOrNull(entry.getKey());
-            typeCode = typeCode == null ? Types.VARCHAR : typeCode;
-            if (typeCode == Types.VARCHAR) {
-                fieldColumn.setSize(String.valueOf(JdbcConstants.DEFAULT_VARCHAR_SIZE));
-            }
+            typeCode = typeCode == null? Types.VARCHAR:typeCode;
+            if(typeCode == Types.VARCHAR) fieldColumn.setSize(String.valueOf(JdbcConstants.DEFAULT_FIELD_VARCHAR_SIZE));
             fieldColumn.setTypeCode(typeCode);
             fieldColumn.setDescription("eagle field column " + entry.getKey() + ":" + entityDefinition.getColumnTypeOrNull(entry.getKey()));
             table.addColumn(fieldColumn);
