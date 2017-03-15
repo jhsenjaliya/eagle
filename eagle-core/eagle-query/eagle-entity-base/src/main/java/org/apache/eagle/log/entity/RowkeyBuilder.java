@@ -137,5 +137,4 @@ public class RowkeyBuilder {
         }
         return false;
     }
-
 }
