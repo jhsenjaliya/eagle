@@ -24,7 +24,8 @@ public class EntityConstants {
     public static final String FIXED_READ_START_HUMANTIME = "1970-01-01 00:00:00";
     public static final String FIXED_READ_END_HUMANTIME = "1970-01-03 00:00:00";
 
-    public static final long FIXED_WRITE_TIMESTAMP =
-        DateTimeUtil.humanDateToSecondsWithoutException(FIXED_WRITE_HUMANTIME) * 1000;
+    public static final long FIXED_WRITE_TIMESTAMP = DateTimeUtil.ONEDAY; // 1970-01-02 00:00:00 UTC
+    public static final long FIXED_READ_START_TIMESTAMP = 0; // 1970-01-01 00:00:00 UTC
+    public static final long FIXED_READ_END_TIMESTAMP = DateTimeUtil.ONEDAY * 2; // 1970-01-03 00:00:00 UTC
 
 }
