@@ -26,13 +26,13 @@ import javax.ws.rs.core.MediaType;
 @Path("ValidateInternals")
 public class EagleServiceSelfCheckResource {
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public EagleServiceSelfCheckAPIEntity selfCheck() {
-        EagleServiceSelfCheckAPIEntity entity = new EagleServiceSelfCheckAPIEntity();
-        entity.setHbaseZookeeperQuorum(EagleConfigFactory.load().getZKQuorum());
-        entity.setHbaseZookeeperClientPort(EagleConfigFactory.load().getZKPort());
-        entity.setEnv(EagleConfigFactory.load().getEnv());
-        return entity;
-    }
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public EagleServiceSelfCheckAPIEntity selfCheck(){
+		EagleServiceSelfCheckAPIEntity entity = new EagleServiceSelfCheckAPIEntity();
+		entity.setHBaseZookeeperQuorum(EagleConfigFactory.load().getZKQuorum());
+		entity.setHBaseZookeeperClientPort(EagleConfigFactory.load().getZKPort());
+		entity.setEnv(EagleConfigFactory.load().getEnv());
+		return entity;
+	}
 }
