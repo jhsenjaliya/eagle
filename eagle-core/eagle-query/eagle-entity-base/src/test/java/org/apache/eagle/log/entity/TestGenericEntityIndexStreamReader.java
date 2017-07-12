@@ -99,12 +99,7 @@ public class TestGenericEntityIndexStreamReader extends TestHBaseBase {
 
         indexReader = new UniqueIndexStreamReader(indexDef, condition);
         batchReader = new GenericEntityBatchReader(indexReader);
-<<<<<<< HEAD
-        entities = batchReader.read();
-        hbase.deleteTable(entityDefinition.getTable());
-=======
         entities =  batchReader.read();
->>>>>>> [EAGLE-895] Improve alert engine metadata to organize by siteId
         Assert.assertNotNull(entities);
         Assert.assertTrue(entities.isEmpty());
     }
@@ -170,13 +165,8 @@ public class TestGenericEntityIndexStreamReader extends TestHBaseBase {
 
         indexReader = new NonClusteredIndexStreamReader(indexDef, condition);
         batchReader = new GenericEntityBatchReader(indexReader);
-<<<<<<< HEAD
-        entities = batchReader.read();
-        hbase.deleteTable(entityDefinition.getTable());
-=======
         entities =  batchReader.read();
         // hbase.deleteTable(entityDefinition.getTable());
->>>>>>> [EAGLE-895] Improve alert engine metadata to organize by siteId
         Assert.assertNotNull(entities);
         Assert.assertTrue(entities.isEmpty());
     }
